@@ -17,7 +17,7 @@ app.get('/:country/:city', async function(req, res) {
     data = dataStore ? dataStore : data;
   } else {
     const resp = await axios.get(
-      `http://api.openweathermap.org/data/2.5/forecast?q=${req.params.city},${req.params.country}&appid=${process.env.API_KEY}`
+      `http://api.openweathermap.org/data/2.5/forecast?q=${req.params.city},${req.params.country}&appid=${process.env.API_KEY}&units=metric`
     );
     data = await resp.data;
     store.set('data', data);
