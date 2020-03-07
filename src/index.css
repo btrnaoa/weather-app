@@ -1,0 +1,28 @@
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.forecast {
+  display: flex;
+}
+
+.forecast.weekly {
+  color: #555;
+  justify-content: space-around;
+  margin: 0.625rem;
+}
+
+.forecast.daily {
+  align-items: center;
+  flex-direction: column;
+}
+
+.temps.high {
+  color: #000;
+}
