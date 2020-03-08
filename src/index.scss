@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
 html {
   box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  font-size: 62.5%;
 }
 
 *,
@@ -8,21 +12,29 @@ html {
   box-sizing: inherit;
 }
 
+body {
+  font-size: 1.6rem;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  > *:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+}
+
 .forecast {
   display: flex;
-}
-
-.forecast.weekly {
-  color: #555;
-  justify-content: space-around;
-  margin: 0.625rem;
-}
-
-.forecast.daily {
-  align-items: center;
-  flex-direction: column;
-}
-
-.temps.high {
-  color: #000;
+  &.daily {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    &:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
 }
