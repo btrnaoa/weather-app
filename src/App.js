@@ -1,18 +1,19 @@
 import React from 'react';
 import Day from './components/Day';
-import { Button } from 'reactstrap';
+import SearchForm from './components/SearchForm';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.retrieveWeatherData = this.retrieveWeatherData.bind(this);
     this.state = {
-      forecasts: []
+      forecasts: [],
+      value: ''
     };
   }
 
-  async retrieveWeatherData() {
-    const resp = await fetch('http://localhost:3001/au/melbourne');
+  async retrieveWeatherData(city) {
+    const resp = await fetch(`http://localhost:3001/au/${city}`);
     const data = await resp.json();
     const { list } = data;
     const arr = Array.from({ length: 7 }, () => ({
@@ -43,7 +44,7 @@ class App extends React.Component {
         high: Math.max(...arr[day].temp_max),
         low: Math.min(...arr[day].temp_min),
         description: mode(arr[day].description),
-        icon: mode(arr[day].icons)
+        icon: mode(arr[day].icons).replace(/.$/, 'd')
       })
     );
     this.setState({ forecasts });
@@ -54,12 +55,26 @@ class App extends React.Component {
     console.log(forecasts);
   }
 
+  handleChange = event => {
+    this.setState({ value: event.target.value });
+  };
+
+  handleSubmit = event => {
+    this.retrieveWeatherData(this.state.value);
+    event.preventDefault();
+  };
+
   render() {
     return (
-      <div>
-        <Button color="primary" onClick={this.retrieveWeatherData}>
-          Update
-        </Button>
+      <div className="container">
+        <header>
+          <h1>Weather App</h1>
+        </header>
+        <SearchForm
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+          value={this.state.value}
+        />
         <div className="forecast weekly">
           {this.state.forecasts.map(forecast => {
             return <Day forecast={forecast} key={forecast.day}></Day>;
