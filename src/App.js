@@ -13,7 +13,7 @@ class App extends React.Component {
   };
 
   handleSubmit = event => {
-    const inputValue = this.state.inputValue;
+    const inputValue = this.state.inputValue.replace(/\s+/g, '');
     const city = inputValue.substring(0, inputValue.indexOf(','));
     const country = inputValue.substring(inputValue.indexOf(',') + 1);
     this.retrieveWeatherData(city, country);
