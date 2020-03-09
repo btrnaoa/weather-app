@@ -14,43 +14,49 @@ class App extends React.Component {
   }
 
   async retrieveWeatherData(city, country) {
-    const resp = await fetch(`http://localhost:3001/${country}/${city}`);
-    const data = await resp.json();
-    this.setState({ data });
+    try {
+      const resp = await fetch(`http://localhost:3001/${country}/${city}`);
+      if (!resp.ok) throw Error(resp.statusText);
 
-    const { list } = data;
-    const arr = Array.from({ length: 7 }, () => ({
-      temp_min: [],
-      temp_max: [],
-      description: [],
-      icons: []
-    }));
-    list.forEach(item => {
-      const day = new Date(item.dt * 1000).getDay();
-      arr[day].temp_min.push(item.main.temp_min);
-      arr[day].temp_max.push(item.main.temp_max);
-      arr[day].description = arr[day].description.concat(
-        item.weather.map(condition => condition.description)
-      );
-      arr[day].icons = arr[day].icons.concat(
-        item.weather.map(condition => condition.icon)
-      );
-    });
+      const data = await resp.json();
+      this.setState({ data });
 
-    const days = [
-      ...new Set(list.map(item => new Date(item.dt * 1000).getDay()))
-    ];
-    const forecasts = [];
-    days.forEach(day =>
-      forecasts.push({
-        day,
-        high: Math.max(...arr[day].temp_max),
-        low: Math.min(...arr[day].temp_min),
-        description: mode(arr[day].description),
-        icon: mode(arr[day].icons).replace(/.$/, 'd')
-      })
-    );
-    this.setState({ forecasts });
+      const { list } = data;
+      const arr = Array.from({ length: 7 }, () => ({
+        temp_min: [],
+        temp_max: [],
+        description: [],
+        icons: []
+      }));
+      list.forEach(item => {
+        const day = new Date(item.dt * 1000).getDay();
+        arr[day].temp_min.push(item.main.temp_min);
+        arr[day].temp_max.push(item.main.temp_max);
+        arr[day].description = arr[day].description.concat(
+          item.weather.map(condition => condition.description)
+        );
+        arr[day].icons = arr[day].icons.concat(
+          item.weather.map(condition => condition.icon)
+        );
+      });
+
+      const days = [
+        ...new Set(list.map(item => new Date(item.dt * 1000).getDay()))
+      ];
+      const forecasts = [];
+      days.forEach(day =>
+        forecasts.push({
+          day,
+          high: Math.max(...arr[day].temp_max),
+          low: Math.min(...arr[day].temp_min),
+          description: mode(arr[day].description),
+          icon: mode(arr[day].icons).replace(/.$/, 'd')
+        })
+      );
+      this.setState({ forecasts });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   handleChange = event => {
