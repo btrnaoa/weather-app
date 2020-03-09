@@ -5,7 +5,7 @@ class SearchForm extends React.Component {
     return (
       <form onSubmit={this.props.onSubmit}>
         <input
-          type="search"
+          type="text"
           placeholder="Melbourne, AU"
           value={this.props.value}
           onChange={this.props.onChange}
