@@ -7,14 +7,17 @@ class App extends React.Component {
     super(props);
     this.retrieveWeatherData = this.retrieveWeatherData.bind(this);
     this.state = {
+      data: {},
       forecasts: [],
       value: ''
     };
   }
 
-  async retrieveWeatherData(city) {
-    const resp = await fetch(`http://localhost:3001/au/${city}`);
+  async retrieveWeatherData(city, country) {
+    const resp = await fetch(`http://localhost:3001/${country}/${city}`);
     const data = await resp.json();
+    this.setState({ data });
+
     const { list } = data;
     const arr = Array.from({ length: 7 }, () => ({
       temp_min: [],
@@ -48,11 +51,6 @@ class App extends React.Component {
       })
     );
     this.setState({ forecasts });
-
-    console.log(data);
-    console.log(arr);
-    console.log(days);
-    console.log(forecasts);
   }
 
   handleChange = event => {
@@ -60,7 +58,10 @@ class App extends React.Component {
   };
 
   handleSubmit = event => {
-    this.retrieveWeatherData(this.state.value);
+    const value = this.state.value;
+    const city = value.substring(0, value.indexOf(','));
+    const country = value.substring(value.indexOf(',') + 1);
+    this.retrieveWeatherData(city, country);
     event.preventDefault();
   };
 
@@ -77,7 +78,7 @@ class App extends React.Component {
         />
         <div className="forecast weekly">
           {this.state.forecasts.map(forecast => {
-            return <Day forecast={forecast} key={forecast.day}></Day>;
+            return <Day forecast={forecast} key={forecast.day} />;
           })}
         </div>
       </div>
