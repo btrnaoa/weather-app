@@ -9,7 +9,7 @@ class App extends React.Component {
     this.state = {
       data: {},
       forecasts: [],
-      value: ''
+      inputValue: ''
     };
   }
 
@@ -60,13 +60,13 @@ class App extends React.Component {
   }
 
   handleChange = event => {
-    this.setState({ value: event.target.value });
+    this.setState({ inputValue: event.target.value });
   };
 
   handleSubmit = event => {
-    const value = this.state.value;
-    const city = value.substring(0, value.indexOf(','));
-    const country = value.substring(value.indexOf(',') + 1);
+    const inputValue = this.state.inputValue;
+    const city = inputValue.substring(0, inputValue.indexOf(','));
+    const country = inputValue.substring(inputValue.indexOf(',') + 1);
     this.retrieveWeatherData(city, country);
     event.preventDefault();
   };
@@ -80,7 +80,7 @@ class App extends React.Component {
         <SearchForm
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
-          value={this.state.value}
+          value={this.state.inputValue}
         />
         <div className="forecast weekly">
           {this.state.forecasts.map(forecast => {
