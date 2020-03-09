@@ -7,7 +7,6 @@ class App extends React.Component {
     super(props);
     this.retrieveWeatherData = this.retrieveWeatherData.bind(this);
     this.state = {
-      data: {},
       forecasts: [],
       inputValue: ''
     };
@@ -19,8 +18,6 @@ class App extends React.Component {
       if (!resp.ok) throw Error(resp.statusText);
 
       const data = await resp.json();
-      this.setState({ data });
-
       const { list } = data;
       const arr = Array.from({ length: 7 }, () => ({
         temp_min: [],
