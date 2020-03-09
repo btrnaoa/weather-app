@@ -8,17 +8,13 @@ require('dotenv').config();
 
 app.use(cors());
 
-app.get('/:country/:city', function(req, res) {
+app.get('/:country/:city', (req, res) => {
   axios
     .get(
       `http://api.openweathermap.org/data/2.5/forecast?q=${req.params.city},${req.params.country}&appid=${process.env.API_KEY}&units=metric`
     )
-    .then(function(resp) {
-      res.send(resp.data);
-    })
-    .catch(function(error) {
-      console.error(error);
-    });
+    .then(resp => res.send(resp.data))
+    .catch(error => console.log(error));
 });
 
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
