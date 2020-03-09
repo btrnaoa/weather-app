@@ -28,6 +28,7 @@ body {
 }
 
 .forecast {
+  color: #555;
   display: flex;
   &.daily {
     flex-direction: column;
@@ -37,4 +38,20 @@ body {
       margin-right: 1rem;
     }
   }
+}
+
+.temps {
+  &.high {
+    color: black;
+  }
+}
+
+input[type='submit'] {
+  background: #ec6e4c;
+  border: none;
+  border-radius: 1.6rem;
+  color: #2b2b2b;
+  cursor: pointer;
+  margin: 1rem;
+  padding: 0.5rem 1rem;
 }
