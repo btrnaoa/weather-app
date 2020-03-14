@@ -3,8 +3,10 @@ const app = express();
 const axios = require('axios');
 const cors = require('cors');
 
-require('dotenv').config();
-const port = process.env.PORT || 5000;
+if (process.env.NODE_ENV !== 'production')
+  require('dotenv').config({ path: './.env.development.local' });
+
+const port = process.env.PORT;
 
 app.use(cors());
 
@@ -17,4 +19,4 @@ app.get('/:country/:city', (req, res) => {
     .catch(error => console.log(error));
 });
 
-app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
+app.listen(port, () => console.log(`Listening on port ${port}`));
