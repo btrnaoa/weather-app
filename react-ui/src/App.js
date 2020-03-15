@@ -3,24 +3,27 @@ import Day from './components/Day';
 import SearchForm from './components/SearchForm';
 
 class App extends React.Component {
-  state = {
-    forecasts: [],
-    inputValue: ''
-  };
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.retrieveWeatherData = this.retrieveWeatherData.bind(this);
+    this.state = { forecasts: [], inputValue: '' };
+  }
 
-  handleChange = event => {
+  handleChange(event) {
     this.setState({ inputValue: event.target.value });
-  };
+  }
 
-  handleSubmit = event => {
+  handleSubmit(event) {
     const inputValue = this.state.inputValue.replace(/\s+/g, '');
     const city = inputValue.substring(0, inputValue.indexOf(','));
     const country = inputValue.substring(inputValue.indexOf(',') + 1);
     this.retrieveWeatherData(city, country);
     event.preventDefault();
-  };
+  }
 
-  retrieveWeatherData = async (city, country) => {
+  async retrieveWeatherData(city, country) {
     try {
       const resp = await fetch(`/${country}/${city}`);
       if (!resp.ok) throw Error(resp.statusText);
@@ -62,7 +65,7 @@ class App extends React.Component {
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
   render() {
     return (
