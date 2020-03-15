@@ -22,9 +22,7 @@ class App extends React.Component {
 
   retrieveWeatherData = async (city, country) => {
     try {
-      const resp = await fetch(
-        `http://localhost:${process.env.REACT_APP_SERVER_PORT}/${country}/${city}`
-      );
+      const resp = await fetch(`/${country}/${city}`);
       if (!resp.ok) throw Error(resp.statusText);
 
       const data = await resp.json();
