@@ -1,4 +1,5 @@
 import React from 'react';
+import '../css/weather-icons.min.css';
 
 const daysInWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -8,11 +9,7 @@ class Day extends React.Component {
     return (
       <div className="forecast daily">
         <span>{daysInWeek[forecast.day]}</span>
-        <img
-          src={`https://openweathermap.org/img/wn/${forecast.icon}@2x.png`}
-          alt={forecast.description}
-          title={forecast.description}
-        />
+        <i className={`wi wi-owm-${forecast.id} group-icon`}></i>
         <div>
           <span className="temps high">{Math.floor(forecast.high)}&deg;</span>{' '}
           <span className="temps low">{Math.floor(forecast.low)}&deg;</span>
