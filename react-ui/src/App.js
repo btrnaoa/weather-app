@@ -7,7 +7,6 @@ class App extends React.Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.retrieveWeatherData = this.retrieveWeatherData.bind(this);
     this.state = { forecasts: [], inputValue: '' };
   }
 
@@ -19,52 +18,54 @@ class App extends React.Component {
     const inputValue = this.state.inputValue.replace(/\s+/g, '');
     const city = inputValue.substring(0, inputValue.indexOf(','));
     const country = inputValue.substring(inputValue.indexOf(',') + 1);
-    this.retrieveWeatherData(city, country);
+    this.getWeatherData(city, country);
     event.preventDefault();
   }
 
-  async retrieveWeatherData(city, country) {
-    try {
-      const resp = await fetch(`/${country}/${city}`);
-      if (!resp.ok) throw Error(resp.statusText);
+  getWeatherData(city, country) {
+    fetch(`/${country}/${city}`)
+      .then(resp => {
+        if (!resp.ok) throw Error(resp.statusText);
+        return resp.json();
+      })
+      .then(data => {
+        const { city, list } = data;
 
-      const data = await resp.json();
-      const { list } = data;
-      const arr = Array.from({ length: 7 }, () => ({
-        temp_min: [],
-        temp_max: [],
-        description: [],
-        icons: []
-      }));
-      list.forEach(item => {
-        const day = new Date(item.dt * 1000).getDay();
-        arr[day].temp_min.push(item.main.temp_min);
-        arr[day].temp_max.push(item.main.temp_max);
-        arr[day].description = arr[day].description.concat(
-          item.weather.map(condition => condition.description)
-        );
-        arr[day].icons = arr[day].icons.concat(
-          item.weather.map(condition => condition.icon)
-        );
+        // Calculate highest and lowest temps for each day
+        const forecasts = [...this.state.forecasts];
+        list.forEach(item => {
+          const day = new Date((item.dt + city.timezone) * 1000).getUTCDay();
+          const forecast = forecasts.find(forecast => forecast.day === day);
+          const { temp_min, temp_max } = item.main;
+          if (forecast) {
+            forecast.high = Math.max(...[forecast.high, temp_max]);
+            forecast.low = Math.min(...[forecast.low, temp_min]);
+          } else {
+            forecasts.push({ day, high: -Infinity, low: Infinity });
+          }
+        });
+
+        // Use first forecast of the day to set weather condition for the entire day as a rough indication
+        for (let forecast of forecasts) {
+          const first = list.filter(
+            item =>
+              new Date((item.dt + city.timezone) * 1000).getUTCDay() ===
+              forecast.day
+          )[0];
+          const { id, main, description } = first.weather[0];
+          Object.assign(forecasts[forecasts.indexOf(forecast)], {
+            id,
+            main,
+            description
+          });
+        }
+
+        this.setState({ forecasts });
+        console.log(this.state.forecasts);
+      })
+      .catch(error => {
+        console.error(error);
       });
-
-      const days = [
-        ...new Set(list.map(item => new Date(item.dt * 1000).getDay()))
-      ];
-      const forecasts = [];
-      days.forEach(day =>
-        forecasts.push({
-          day,
-          high: Math.max(...arr[day].temp_max),
-          low: Math.min(...arr[day].temp_min),
-          description: mode(arr[day].description),
-          icon: mode(arr[day].icons).replace(/.$/, 'd')
-        })
-      );
-      this.setState({ forecasts });
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   render() {
@@ -89,11 +90,3 @@ class App extends React.Component {
 }
 
 export default App;
-
-const mode = arr =>
-  arr
-    .sort(
-      (a, b) =>
-        arr.filter(v => v === a).length - arr.filter(v => v === b).length
-    )
-    .pop();
