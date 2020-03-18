@@ -29,7 +29,7 @@ API_KEY=
 
 You also need to specify the port to run the API server on e.g. `3001`
 
-`.env.developlment.local`:
+`.env.development.local`:
 
 ```
 PORT=
