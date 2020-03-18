@@ -1,6 +1,5 @@
 import React from 'react';
 import Day from './components/Day';
-import SearchForm from './components/SearchForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -9,19 +8,19 @@ class App extends React.Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = { city: '', country: '', forecasts: [], inputValue: '' };
+    this.state = { city: '', country: '', forecasts: [], value: '' };
   }
 
   handleChange(event) {
-    this.setState({ inputValue: event.target.value });
+    this.setState({ value: event.target.value });
   }
 
   handleSubmit(event) {
-    const inputValue = this.state.inputValue.replace(/\s+/g, '');
-    const city = inputValue.substring(0, inputValue.indexOf(','));
-    const country = inputValue.substring(inputValue.indexOf(',') + 1);
+    const value = this.state.value.replace(/\s+/g, '');
+    const city = value.substring(0, value.indexOf(','));
+    const country = value.substring(value.indexOf(',') + 1);
     this.getWeatherData(city, country);
-    this.setState({ inputValue: '' });
+    this.setState({ value: '' });
     event.preventDefault();
   }
 
@@ -83,11 +82,14 @@ class App extends React.Component {
           </div>
         ) : null}
 
-        <SearchForm
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-          value={this.state.inputValue}
-        />
+        <form onSubmit={this.handleSubmit}>
+          <input
+            type="text"
+            value={this.state.value}
+            onChange={this.handleChange}
+          />
+          <input type="submit" value="Search" />
+        </form>
         <div className="forecast">
           {this.state.forecasts.map(forecast => {
             return <Day forecast={forecast} key={forecast.day} />;
