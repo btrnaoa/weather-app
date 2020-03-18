@@ -1,13 +1,15 @@
 import React from 'react';
 import Day from './components/Day';
 import SearchForm from './components/SearchForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = { forecasts: [], inputValue: '' };
+    this.state = { city: '', country: '', forecasts: [], inputValue: '' };
   }
 
   handleChange(event) {
@@ -19,6 +21,7 @@ class App extends React.Component {
     const city = inputValue.substring(0, inputValue.indexOf(','));
     const country = inputValue.substring(inputValue.indexOf(',') + 1);
     this.getWeatherData(city, country);
+    this.setState({ inputValue: '' });
     event.preventDefault();
   }
 
@@ -60,8 +63,8 @@ class App extends React.Component {
           });
         }
 
+        this.setState({ city: city.name, country: city.country });
         this.setState({ forecasts });
-        console.log(this.state.forecasts);
       })
       .catch(error => {
         console.error(error);
@@ -70,16 +73,22 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="container">
-        <header>
-          <h1>Weather App</h1>
-        </header>
+      <div className="container" style={{ height: '100vh' }}>
+        {this.state.city ? (
+          <div className="container">
+            <span style={{ fontSize: '2rem' }}>
+              {this.state.city}, {this.state.country}
+            </span>
+            <FontAwesomeIcon icon={faMapMarkerAlt} size="lg" />
+          </div>
+        ) : null}
+
         <SearchForm
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
           value={this.state.inputValue}
         />
-        <div className="forecast weekly">
+        <div className="forecast">
           {this.state.forecasts.map(forecast => {
             return <Day forecast={forecast} key={forecast.day} />;
           })}

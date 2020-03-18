@@ -16,47 +16,56 @@ body {
   font-size: 1.6rem;
 }
 
+input[type='submit'] {
+  background: #eee;
+  border: 0.1rem solid transparent;
+  border-radius: 0.5rem;
+  color: #333;
+  cursor: pointer;
+  margin: 1rem;
+  padding: 1rem 1.4rem;
+  transition: ease-in background 0.1s;
+}
+
+input[type='submit']:hover {
+  background: #ccc;
+}
+
+input[type='text'] {
+  background: transparent;
+  border: 0.1rem solid lightgrey;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
 .container {
-  display: flex;
   align-items: center;
-  justify-content: center;
+  display: flex;
   flex-direction: column;
-  height: 100vh;
-  > *:not(:last-child) {
-    margin-bottom: 1rem;
-  }
+  justify-content: center;
+}
+
+.container > *:not(:last-child) {
+  margin-bottom: 1rem;
 }
 
 .forecast {
   color: #555;
   display: flex;
-  &.daily {
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-    &:not(:last-child) {
-      margin-right: 1rem;
-    }
-  }
 }
 
-.temps {
-  &.high {
-    color: black;
-  }
+.forecast.daily {
+  align-items: center;
+  flex: 1 0;
+  flex-direction: column;
+  padding: 1rem;
+  text-align: center;
 }
 
-.group-icon {
-  font-size: 5rem;
-  margin: 2rem 0;
+.forecast.daily:not(:last-child) {
+  margin-right: 1rem;
 }
 
-input[type='submit'] {
-  background: #ec6e4c;
-  border: none;
-  border-radius: 1.6rem;
-  color: #2b2b2b;
-  cursor: pointer;
+.forecast.daily > * {
   margin: 1rem;
-  padding: 0.5rem 1rem;
 }
