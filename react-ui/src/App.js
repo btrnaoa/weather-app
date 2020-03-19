@@ -3,6 +3,10 @@ import Day from './components/Day';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 
+function getDay(secs) {
+  return new Date(secs * 1000).getUTCDay();
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -34,27 +38,25 @@ class App extends React.Component {
         const { city, list } = data;
 
         // Calculate highest and lowest temps for each day
-        const forecasts = [...this.state.forecasts];
+        const forecasts = [];
         list.forEach(item => {
-          const day = new Date((item.dt + city.timezone) * 1000).getUTCDay();
+          const day = getDay(item.dt + city.timezone);
           const forecast = forecasts.find(forecast => forecast.day === day);
           const { temp_min, temp_max } = item.main;
           if (forecast) {
             forecast.high = Math.max(...[forecast.high, temp_max]);
             forecast.low = Math.min(...[forecast.low, temp_min]);
           } else {
-            forecasts.push({ day, high: -Infinity, low: Infinity });
+            forecasts.push({ day, high: temp_max, low: temp_min });
           }
         });
 
-        // Use first forecast of the day to set weather condition for the entire day as a rough indication
+        // Assign earliest weather conditions for each forecast
         for (let forecast of forecasts) {
-          const first = list.filter(
-            item =>
-              new Date((item.dt + city.timezone) * 1000).getUTCDay() ===
-              forecast.day
+          const earliest = list.filter(
+            item => getDay(item.dt + city.timezone) === forecast.day
           )[0];
-          const { id, main, description } = first.weather[0];
+          const { id, main, description } = earliest.weather[0];
           Object.assign(forecasts[forecasts.indexOf(forecast)], {
             id,
             main,
@@ -81,7 +83,6 @@ class App extends React.Component {
             <FontAwesomeIcon icon={faMapMarkerAlt} size="lg" />
           </div>
         ) : null}
-
         <form onSubmit={this.handleSubmit}>
           <input
             type="text"
