@@ -3,6 +3,13 @@ import Day from './components/Day';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 
+function formatName(name) {
+  return name
+    .trim()
+    .replace(' ', '+')
+    .replace(/\s+/g, '');
+}
+
 function getDay(secs) {
   return new Date(secs * 1000).getUTCDay();
 }
@@ -20,16 +27,18 @@ class App extends React.Component {
   }
 
   handleSubmit(event) {
-    const value = this.state.value.replace(/\s+/g, '');
-    const city = value.substring(0, value.indexOf(','));
-    const country = value.substring(value.indexOf(',') + 1);
-    this.getWeatherData(city, country);
+    const value = this.state.value;
+    let city = value;
+    let country = '';
+    if (value.includes(',')) [city, country] = value.split(',');
+    this.getWeatherData(formatName(city), formatName(country));
     this.setState({ value: '' });
     event.preventDefault();
   }
 
   getWeatherData(city, country) {
-    fetch(`/${country}/${city}`)
+    const path = country ? `/${country}/${city}` : `/${city}`;
+    fetch(path)
       .then(resp => {
         if (!resp.ok) throw Error(resp.statusText);
         return resp.json();

@@ -13,11 +13,11 @@ app.use(cors());
 
 app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
-app.get('/:country/:city', (req, res) => {
+app.get('/:country?/:city', (req, res) => {
+  const { country, city } = req.params;
+  let api = `http://api.openweathermap.org/data/2.5/forecast?appid=${process.env.API_KEY}&units=metric&q=${city}`;
   axios
-    .get(
-      `http://api.openweathermap.org/data/2.5/forecast?q=${req.params.city},${req.params.country}&appid=${process.env.API_KEY}&units=metric`
-    )
+    .get(country ? api.concat(',', country) : api)
     .then(resp => res.send(resp.data))
     .catch(error => console.log(error));
 });
