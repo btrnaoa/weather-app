@@ -100,6 +100,7 @@ class App extends React.Component {
           <input
             type="text"
             value={this.state.value}
+            placeholder="City"
             onChange={this.handleChange}
           />
           <input type="submit" value="Search" />
