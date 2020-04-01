@@ -44,7 +44,11 @@ class App extends React.Component {
         return resp.json();
       })
       .then(data => {
-        const { city, list } = data;
+        const { cod, message, city, list } = data;
+        if ((!city || !list) && cod && message) {
+          alert(message);
+          return;
+        }
 
         // Calculate highest and lowest temps for each day
         const forecasts = [];

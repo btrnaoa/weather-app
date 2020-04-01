@@ -18,8 +18,17 @@ app.get('/:country?/:city', (req, res) => {
   let api = `http://api.openweathermap.org/data/2.5/forecast?appid=${process.env.API_KEY}&units=metric&q=${city}`;
   axios
     .get(country ? api.concat(',', country) : api)
-    .then(resp => res.send(resp.data))
-    .catch(error => console.log(error));
+    .then(resp => {
+      res.send(resp.data);
+    })
+    .catch(error => {
+      const resp = error.response;
+      if (resp && resp.data) {
+        res.send(resp.data);
+      } else {
+        console.log(error);
+      }
+    });
 });
 
 app.get('*', (req, res) => {
