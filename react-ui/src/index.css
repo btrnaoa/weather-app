@@ -45,10 +45,6 @@ input[type='text'] {
   justify-content: center;
 }
 
-.container > *:not(:last-child) {
-  margin-bottom: 1rem;
-}
-
 .forecast {
   color: #555;
   display: flex;
@@ -60,10 +56,6 @@ input[type='text'] {
   flex-direction: column;
   padding: 1rem;
   text-align: center;
-}
-
-.forecast.daily:not(:last-child) {
-  margin-right: 1rem;
 }
 
 .forecast.daily > * {
