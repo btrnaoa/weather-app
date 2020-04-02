@@ -1,7 +1,7 @@
 import React from 'react';
 import Day from './components/Day';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import LocationMarker from './components/LocationMarker';
+import SearchForm from './components/SearchForm';
 
 function formatName(name) {
   return name
@@ -19,7 +19,11 @@ class App extends React.Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = { city: '', country: '', forecasts: [], value: '' };
+    this.state = {
+      forecasts: [],
+      location: { city: '', country: '' },
+      value: ''
+    };
   }
 
   handleChange(event) {
@@ -77,7 +81,7 @@ class App extends React.Component {
           });
         }
 
-        this.setState({ city: city.name, country: city.country });
+        this.setState({ location: { city: city.name, country: city.country } });
         this.setState({ forecasts });
       })
       .catch(error => {
@@ -88,23 +92,14 @@ class App extends React.Component {
   render() {
     return (
       <div className="container" style={{ height: '100vh' }}>
-        {this.state.city ? (
-          <div className="container">
-            <span style={{ fontSize: '2rem' }}>
-              {this.state.city}, {this.state.country}
-            </span>
-            <FontAwesomeIcon icon={faMapMarkerAlt} size="lg" />
-          </div>
+        {this.state.location.city ? (
+          <LocationMarker location={this.state.location} />
         ) : null}
-        <form onSubmit={this.handleSubmit}>
-          <input
-            type="text"
-            value={this.state.value}
-            placeholder="City"
-            onChange={this.handleChange}
-          />
-          <input type="submit" value="Search" />
-        </form>
+        <SearchForm
+          value={this.state.value}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+        />
         <div className="forecast">
           {this.state.forecasts.map(forecast => {
             return <Day forecast={forecast} key={forecast.day} />;
