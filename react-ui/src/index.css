@@ -48,6 +48,7 @@ input[type='text'] {
 .forecast {
   color: #555;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .forecast.daily {
@@ -60,4 +61,10 @@ input[type='text'] {
 
 .forecast.daily > * {
   margin: 1rem;
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 50%;
+  }
 }
