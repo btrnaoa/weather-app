@@ -1,13 +1,10 @@
 import React from 'react';
-import Day from './components/Day';
+import WeatherCard from './components/WeatherCard';
 import LocationMarker from './components/LocationMarker';
 import SearchForm from './components/SearchForm';
 
 function formatName(name) {
-  return name
-    .trim()
-    .replace(' ', '+')
-    .replace(/\s+/g, '');
+  return name.trim().replace(' ', '+').replace(/\s+/g, '');
 }
 
 function getDay(secs) {
@@ -22,7 +19,7 @@ class App extends React.Component {
     this.state = {
       forecasts: [],
       location: { city: '', country: '' },
-      value: ''
+      value: '',
     };
   }
 
@@ -43,11 +40,11 @@ class App extends React.Component {
   getWeatherData(city, country) {
     const path = country ? `/${country}/${city}` : `/${city}`;
     fetch(path)
-      .then(resp => {
+      .then((resp) => {
         if (!resp.ok) throw Error(resp.statusText);
         return resp.json();
       })
-      .then(data => {
+      .then((data) => {
         const { cod, message, city, list } = data;
         if ((!city || !list) && cod && message) {
           alert(message);
@@ -56,9 +53,9 @@ class App extends React.Component {
 
         // Calculate highest and lowest temps for each day
         const forecasts = [];
-        list.forEach(item => {
+        list.forEach((item) => {
           const day = getDay(item.dt + city.timezone);
-          const forecast = forecasts.find(forecast => forecast.day === day);
+          const forecast = forecasts.find((forecast) => forecast.day === day);
           const { temp_min, temp_max } = item.main;
           if (forecast) {
             forecast.high = Math.max(...[forecast.high, temp_max]);
@@ -71,20 +68,20 @@ class App extends React.Component {
         // Assign earliest weather conditions for each forecast
         for (let forecast of forecasts) {
           const earliest = list.filter(
-            item => getDay(item.dt + city.timezone) === forecast.day
+            (item) => getDay(item.dt + city.timezone) === forecast.day
           )[0];
           const { id, main, description } = earliest.weather[0];
           Object.assign(forecasts[forecasts.indexOf(forecast)], {
             id,
             main,
-            description
+            description,
           });
         }
 
         this.setState({ location: { city: city.name, country: city.country } });
         this.setState({ forecasts });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }
@@ -101,8 +98,8 @@ class App extends React.Component {
           onSubmit={this.handleSubmit}
         />
         <div className="forecast">
-          {this.state.forecasts.map(forecast => {
-            return <Day forecast={forecast} key={forecast.day} />;
+          {this.state.forecasts.map((forecast) => {
+            return <WeatherCard forecast={forecast} key={forecast.day} />;
           })}
         </div>
       </div>
