@@ -53,10 +53,17 @@ input[type='text'] {
 
 .forecast.daily {
   align-items: center;
+  background: #f5f5f5;
+  border-radius: 0.8rem;
+  box-shadow: 0 0 1rem -0.2rem rgba(0, 0, 0, 0.2);
   flex: 1 0;
   flex-direction: column;
   padding: 1rem;
   text-align: center;
+}
+
+.forecast.daily:not(:last-child) {
+  margin-right: 2rem;
 }
 
 .forecast.daily > * {
