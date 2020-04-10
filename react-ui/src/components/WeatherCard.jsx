@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/weather-icons.min.css';
 
 const daysInWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
