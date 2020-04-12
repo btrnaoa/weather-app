@@ -2,7 +2,7 @@ import React from 'react';
 
 const daysInWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export default function Day({ forecast }) {
+export default function WeatherCard({ forecast }) {
   return (
     <div className="forecast daily">
       <span>{daysInWeek[forecast.day]}</span>
